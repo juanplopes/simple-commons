@@ -94,12 +94,12 @@ namespace Simple.IO
 
         public T Get<T>(string name, T defaultValue)
         {
-            var realType = TypesHelper.GetValueTypeIfNullable(typeof(T));
+            var realType = ReflectionExtensions.GetValueTypeIfNullable(typeof(T));
             string value = null;
 
             if (parameters.TryGetValue(name, out value))
             {
-                if (TypesHelper.CanAssign(realType, typeof(Enum)))
+                if (ReflectionExtensions.CanAssign(realType, typeof(Enum)))
                     return (T)Enum.Parse(realType, value, true);
 
                 try

@@ -39,14 +39,14 @@ namespace Simple.Tests.Expressions
         [Test]
         public void TestSimplePropertyName()
         {
-            var propName = ExpressionHelper.GetMemberName((A a) => a.BProp);
+            var propName = ExpressionExtensions.GetMemberName((A a) => a.BProp);
             propName.Should().Be("BProp");
         }
 
         [Test]
         public void TestNestedPropertyName()
         {
-            var propName = ExpressionHelper.GetMemberName((A a) => a.BProp.CProp.IntProp);
+            var propName = ExpressionExtensions.GetMemberName((A a) => a.BProp.CProp.IntProp);
             propName.Should().Be("BProp.CProp.IntProp");
         }
 
@@ -58,7 +58,7 @@ namespace Simple.Tests.Expressions
             Expression<Func<A, B>> lambda = x => x.BProp;
 
             A a = new A();
-            ExpressionHelper.SetValue(lambda, a, new B() { Diff = 42 });
+            ExpressionExtensions.SetValue(lambda, a, new B() { Diff = 42 });
 
 
             a.BProp.Should().Not.Be.Null();
@@ -84,7 +84,7 @@ namespace Simple.Tests.Expressions
         [Test]
         public void GetMemberListWithNullExpressionShouldReturnEmptyList()
         {
-            ExpressionHelper.GetMemberList(null).Should().Be.Empty();
+            ExpressionExtensions.GetMemberList(null).Should().Be.Empty();
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace Simple.Tests.Expressions
             Expression<Func<A, int>> lambda = x => x.BProp.CProp.IntProp;
 
             A a = new A();
-            ExpressionHelper.SetValue(lambda, a, "42");
+            ExpressionExtensions.SetValue(lambda, a, "42");
 
             a.BProp.CProp.IntProp.Should().Be(42);
         }
@@ -104,7 +104,7 @@ namespace Simple.Tests.Expressions
             Expression<Func<A, int>> lambda = x => x.BProp.CProp.IntProp;
 
             A a = new A();
-            a.Executing(x=> ExpressionHelper.SetValue(lambda, x, new C()))
+            a.Executing(x=> ExpressionExtensions.SetValue(lambda, x, new C()))
                 .Throws<ArgumentException>();
         }
 
@@ -114,7 +114,7 @@ namespace Simple.Tests.Expressions
             Expression<Func<A, IList<D>>> lambda = x => x.BProp.CProp.DList;
 
             A a = new A();
-            ExpressionHelper.SetValue(lambda, a, new[] { new D(1), new D(2) });
+            ExpressionExtensions.SetValue(lambda, a, new[] { new D(1), new D(2) });
 
             a.BProp.CProp.DList.Should().Not.Be.Null();
         }
@@ -127,7 +127,7 @@ namespace Simple.Tests.Expressions
 
             A a = new A();
 
-            ExpressionHelper.SetValue(lambda, a, 50);
+            ExpressionExtensions.SetValue(lambda, a, 50);
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace Simple.Tests.Expressions
             Expression<Func<A, B>> lambda = x => x.BProp;
 
             A a = new A();
-            ExpressionHelper.SetValue(lambda, a, new B());
+            ExpressionExtensions.SetValue(lambda, a, new B());
 
 
             a.BProp.Should().Not.Be.Null();
@@ -149,7 +149,7 @@ namespace Simple.Tests.Expressions
             Expression<Func<A, int>> lambda = x => x.BProp.CProp.IntProp;
 
             A a = new A();
-            ExpressionHelper.SetValue(lambda, a, 42);
+            ExpressionExtensions.SetValue(lambda, a, 42);
 
             a.BProp.Should().Not.Be.Null();
             a.BProp.Diff.Should().Be(0);
@@ -163,7 +163,7 @@ namespace Simple.Tests.Expressions
             Expression<Func<A, int>> lambda = x => x.BProp.CProp.DProp.Value;
 
             A a = new A();
-            ExpressionHelper.SetValue(lambda, a, 42);
+            ExpressionExtensions.SetValue(lambda, a, 42);
 
         }
 

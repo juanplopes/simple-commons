@@ -20,14 +20,11 @@ namespace Simple
 
         public static TValue SafeGet<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
         {
-            try
-            {
-                return dictionary[key];
-            }
-            catch (KeyNotFoundException)
-            {
+            TValue value;
+            if (dictionary.TryGetValue(key, out value))
+                return value;
+            else
                 return default(TValue);
-            }
         }
 
         public static T AggregateJoin<T>(this IEnumerable<T> enumerable, Func<T, T, T> joiner)

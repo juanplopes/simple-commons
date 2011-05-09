@@ -16,7 +16,7 @@ namespace Simple.Common
         /// <summary>
         /// Constructs using a sieve calculated up to 65,636.
         /// </summary>
-        public PrimeNumbers() : this(Resources.Primes) { }
+        public PrimeNumbers() : this(Resources.Resources.Primes) { }
 
         /// <summary>
         /// Constructs using any byte array instance.

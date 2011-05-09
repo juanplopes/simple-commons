@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Simple {
+namespace Simple.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Simple {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Simple.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Simple.Resources.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -79,9 +79,9 @@ namespace Simple {
         ///    &lt;mapping&gt;
         ///      &lt;level value=&quot;WARN&quot; / [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string Log4netConfig {
+        internal static string Log4net {
             get {
-                return ResourceManager.GetString("Log4netConfig", resourceCulture);
+                return ResourceManager.GetString("Log4net", resourceCulture);
             }
         }
         

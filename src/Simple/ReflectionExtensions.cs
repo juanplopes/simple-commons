@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Simple
 {
-    public static class TypesHelper
+    public static class ReflectionExtensions
     {
         public static Type GetValueTypeIfNullable(this Type type)
         {

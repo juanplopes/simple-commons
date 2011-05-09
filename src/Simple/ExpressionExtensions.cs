@@ -9,8 +9,12 @@ using Simple.Expressions;
 
 namespace Simple
 {
-    public static class ExpressionHelper
+    public static class ExpressionExtensions
     {
+        public static ExpressionWrapper<T, P> ToSettable<T, P>(this Expression<Func<T, P>> expr)
+        {
+            return new ExpressionWrapper<T, P>(expr);
+        }
 
         public static string GetMemberName<T, P>(this Expression<Func<T, P>> expr)
         {
