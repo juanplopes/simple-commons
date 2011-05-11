@@ -11,7 +11,7 @@ namespace Simple.Reflection
     public class CompositeSettableMember : ISettableMemberInfo
     {
         [NonSerialized]
-        protected static MethodCache Cache = new MethodCache();
+        protected static MethodCache methods = new MethodCache();
 
         private IList<ISettableMemberInfo> members;
         public IEnumerable<ISettableMemberInfo> Members { get { return members; } }
@@ -75,7 +75,7 @@ namespace Simple.Reflection
                 object temp = member.Get(target);
                 if (temp == null)
                 {
-                    temp = Cache.CreateInstance(member.Type);
+                    temp = methods.GetConstructor(member.Type)(null);
                     member.Set(target, temp);
                 }
                 target = temp;

@@ -10,20 +10,19 @@ using System.Security.Permissions;
 namespace Simple.DynamicProxy
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-    public class MarshallableDynamicProxyImpl : RealProxy, IDynamicProxy
+    public class MarshallableProxy : RealProxy, IDynamicProxy
     {
         public string URI { get; protected set; }
         public MarshalByRefObject ProxyTargetTyped { get; protected set; }
         public object ProxyTarget { get { return ProxyTargetTyped; } }
         public InvocationDelegate InvocationHandler { get; set; }
 
-        public MarshallableDynamicProxyImpl(MarshalByRefObject targetObject, InvocationDelegate invoker)
+        public MarshallableProxy(MarshalByRefObject targetObject, InvocationDelegate invoker)
             : this(targetObject.GetType(), targetObject, invoker)
         {
         }
 
-
-        public MarshallableDynamicProxyImpl(Type type1, MarshalByRefObject targetObject, InvocationDelegate invoker)
+        public MarshallableProxy(Type type1, MarshalByRefObject targetObject, InvocationDelegate invoker)
             : base(type1)
         {
             ProxyTargetTyped = targetObject;

@@ -266,14 +266,14 @@ namespace Simple.Tests.Common
         public void CanDoUnionOnSingleItem()
         {
             var seq = new[] { 1, 2, 3 };
-            seq.Union(4).Should().Have.SameSequenceAs(1, 2, 3, 4);
+            seq.Concat(4).Should().Have.SameSequenceAs(1, 2, 3, 4);
         }
 
         [Test]
         public void CanDoUnionOnTwoItems()
         {
             var seq = new[] { 1, 2, 3 };
-            seq.Union(4, 6).Should().Have.SameSequenceAs(1, 2, 3, 4, 6);
+            seq.Concat(4, 6).Should().Have.SameSequenceAs(1, 2, 3, 4, 6);
         }
 
         [Test]
@@ -281,7 +281,7 @@ namespace Simple.Tests.Common
         {
             var seq = new[] { 1, 2, 3 };
             var seq2 = new[] { 4, 5, 6 };
-            seq.Union(seq2).Should().Have.SameSequenceAs(1, 2, 3, 4, 5, 6);
+            seq.Concat(seq2).Should().Have.SameSequenceAs(1, 2, 3, 4, 5, 6);
         }
 
         [Test]

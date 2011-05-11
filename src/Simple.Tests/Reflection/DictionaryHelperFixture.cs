@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using NUnit.Framework;
 using SharpTestsEx;
 using Simple.Reflection;
+using System.Globalization;
 
 namespace Simple.Tests.Reflection
 {
@@ -53,7 +54,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void CreateSimpleObjectFromAnonymousTypesCaseSensitive()
         {
-            var value = DictionaryHelper.FromAnonymous(new { aaa = 123, bbb = "asd" }, true);
+            var value = DictionaryHelper.FromAnonymous(new { aaa = 123, bbb = "asd" });
 
             value.Count.Should().Be(2);
 
@@ -70,7 +71,7 @@ namespace Simple.Tests.Reflection
             Expression<Func<object, object>>[] array = new Expression<Func<object, object>>[] { 
                 aaa => 123, bbb => "asd"};
 
-            var value = DictionaryHelper.FromExpressions(array, true);
+            var value = DictionaryHelper.FromExpressions(array);
 
             value.Count.Should().Be(2);
 
@@ -84,7 +85,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void CreateSimpleObjectFromAnonymousTypesCaseInsensitive()
         {
-            var value = DictionaryHelper.FromAnonymous(new { aaa = 123, bbb = "asd" });
+            var value = DictionaryHelper.FromAnonymous(StringComparer.InvariantCultureIgnoreCase, new { aaa = 123, bbb = "asd" });
 
             value.Count.Should().Be(2);
 
@@ -98,7 +99,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void CreateSimpleObjectFromExpressionsCaseInsensitive()
         {
-            var value = DictionaryHelper.FromExpressions(aaa => 123, bbb => "asd");
+            var value = DictionaryHelper.FromExpressions(StringComparer.InvariantCultureIgnoreCase, aaa => 123, bbb => "asd");
 
             value.Count.Should().Be(2);
 
@@ -126,13 +127,6 @@ namespace Simple.Tests.Reflection
             value["BBB"].Should().Be("ASD");
         }
 
-        [Test]
-        public void CreateSimpleObjectFromNullExpressions()
-        {
-            var value = DictionaryHelper.FromExpressions(null);
-
-            value.Count.Should().Be(0);
-        }
 
         [Test]
         public void CreateSimpleObjectFromNullObject()

@@ -103,9 +103,9 @@ namespace Simple
             return builder.ToString();
         }
 
-        public static IEnumerable<T> Union<T>(this IEnumerable<T> enumerable, params T[] items)
+        public static IEnumerable<T> Concat<T>(this IEnumerable<T> enumerable, params T[] items)
         {
-            return enumerable.Union((IEnumerable<T>)items);
+            return enumerable.Concat((IEnumerable<T>)items);
         }
 
         public static TResult SafeAggregate<TSource, TResult>(this IQueryable<TSource> source, Func<IQueryable<TSource>, TResult> selector)

@@ -8,11 +8,11 @@ namespace Simple.Reflection
     {
         public static IDictionary<string, object> FromExpressions(params Expression<Func<object, object>>[] items)
         {
-            return FromExpressions(items, false);
+            return FromExpressions(null, items);
         }
-        public static IDictionary<string, object> FromExpressions(Expression<Func<object, object>>[] items, bool caseSensitive)
+        public static IDictionary<string, object> FromExpressions(IEqualityComparer<string> comparer, params Expression<Func<object, object>>[] items)
         {
-            var value = new Dictionary<string, object>(caseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
+            var value = new Dictionary<string, object>(comparer ?? StringComparer.InvariantCulture);
             if (items == null) return value;
 
             foreach (var item in items)
@@ -26,17 +26,17 @@ namespace Simple.Reflection
 
         public static IDictionary<string, object> FromAnonymous(object obj)
         {
-            return FromAnonymous(obj, false);
+            return FromAnonymous(null, obj);
         }
 
-        public static IDictionary<string, object> FromAnonymous(object obj, bool caseSensitive)
+        public static IDictionary<string, object> FromAnonymous(IEqualityComparer<string> comparer, object obj)
         {
-            var value = new Dictionary<string, object>(caseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
+            var value = new Dictionary<string, object>(comparer ?? StringComparer.InvariantCulture);
             if (obj == null) return value;
 
             foreach (var prop in obj.GetType().GetProperties())
             {
-                value[prop.Name] = MethodCache.Do.GetGetter(prop)(obj, null);
+                value[prop.Name] = prop.GetValue(obj, null);
             }
 
             return value;

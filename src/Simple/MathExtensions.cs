@@ -93,13 +93,15 @@ namespace Simple
             return Math.Abs(a - b) < delta;
         }
 
-        /// <summary>
-        /// Returns the singleton instance for the prime numbers enumerable.
-        /// </summary>
-        /// <returns>The enumerable.</returns>
+
+        static class Internal
+        {
+            public static PrimeNumbers Instance = new PrimeNumbers();
+        }
+
         public static PrimeNumbers GetPrimes()
         {
-            return Singleton<PrimeNumbers>.Instance;
+            return Internal.Instance;
         }
 
 

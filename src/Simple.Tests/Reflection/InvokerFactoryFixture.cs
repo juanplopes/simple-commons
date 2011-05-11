@@ -13,7 +13,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void TestIntReturn()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass).GetMethod("TestInt"));
+            var inv = new DelegateFactory().Create(typeof(TestClass).GetMethod("TestInt"));
             object res = inv.Invoke(new TestClass());
             res.Should().Be(42);
         }
@@ -21,7 +21,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void TestStaticIntReturn()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass).GetMethod("TestStaticInt"));
+            var inv = new DelegateFactory().Create(typeof(TestClass).GetMethod("TestStaticInt"));
             object res = inv.Invoke(null);
             res.Should().Be(30);
         }
@@ -29,7 +29,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void TestStaticIntReturnWithParam()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass).GetMethod("TestStaticIntString"));
+            var inv = new DelegateFactory().Create(typeof(TestClass).GetMethod("TestStaticIntString"));
             object res = inv.Invoke(null, "444");
             res.Should().Be(444);
         }
@@ -37,7 +37,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void TestStaticIntReturnWithTwoParams()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass).GetMethod("TestStaticIntTwo"));
+            var inv = new DelegateFactory().Create(typeof(TestClass).GetMethod("TestStaticIntTwo"));
             object res = inv.Invoke(null, "444", 2);
             res.Should().Be(446);
         }
@@ -46,7 +46,7 @@ namespace Simple.Tests.Reflection
         public void TestLambdaVoid()
         {
             Action action = () => { };
-            var inv = InvokerFactory.Do.Create(action.Method);
+            var inv = new DelegateFactory().Create(action.Method);
             inv.Invoke(null);
         }
 
@@ -54,14 +54,14 @@ namespace Simple.Tests.Reflection
         public void TestTypedLambda()
         {
             Func<int, int> func = x => x + x;
-            var inv = InvokerFactory.Do.Create(func.Method);
+            var inv = new DelegateFactory().Create(func.Method);
             Assert.AreEqual(100, inv.Invoke(null, 50));
         }
 
         [Test]
         public void TestVoidReturn()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass).GetMethod("TestVoid"));
+            var inv = new DelegateFactory().Create(typeof(TestClass).GetMethod("TestVoid"));
             object res = inv.Invoke(new TestClass());
             res.Should().Be.Null();
         }
@@ -69,7 +69,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void TestStringReturn()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass).GetMethod("TestString"));
+            var inv = new DelegateFactory().Create(typeof(TestClass).GetMethod("TestString"));
             object res = inv.Invoke(new TestClass());
             res.Should().Be("whatever");
         }
@@ -77,7 +77,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void TestIntParam()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass).GetMethod("TestIntParam"));
+            var inv = new DelegateFactory().Create(typeof(TestClass).GetMethod("TestIntParam"));
             object res = inv.Invoke(new TestClass(), 42);
 
             res.Should().Be(42);
@@ -86,7 +86,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void TestOutParam()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass).GetMethod("TestOutParam"));
+            var inv = new DelegateFactory().Create(typeof(TestClass).GetMethod("TestOutParam"));
             var objs = new object[] { 10, null };
 
             object res = inv.Invoke(new TestClass(), objs);
@@ -97,7 +97,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void TestRefParam()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass).GetMethod("TestRefParam"));
+            var inv = new DelegateFactory().Create(typeof(TestClass).GetMethod("TestRefParam"));
             object[] p = { 42 };
             object res = inv.Invoke(new TestClass(), p);
             res.Should().Be("42");
@@ -107,35 +107,35 @@ namespace Simple.Tests.Reflection
         [Test, ExpectedException(typeof(InvalidCastException))]
         public void TestWrongTypeSignature()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass).GetMethod("TestIntParam"));
+            var inv = new DelegateFactory().Create(typeof(TestClass).GetMethod("TestIntParam"));
             inv.Invoke(new TestClass(), new object[] { "teste" });
         }
 
         [Test]
         public void TestMoreArgumentsSignature()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass).GetMethod("TestIntParam"));
+            var inv = new DelegateFactory().Create(typeof(TestClass).GetMethod("TestIntParam"));
             inv.Invoke(new TestClass(), new object[] { 10, "teste" });
         }
 
         [Test, ExpectedException(typeof(IndexOutOfRangeException))]
         public void TestLessArgumentsSignature()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass).GetMethod("TestIntParam"));
+            var inv = new DelegateFactory().Create(typeof(TestClass).GetMethod("TestIntParam"));
             inv.Invoke(new TestClass(), new object[] { });
         }
 
         [Test, ExpectedException(typeof(ArgumentException), ExpectedMessage = "AAA")]
         public void TestException()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass).GetMethod("TestException"));
+            var inv = new DelegateFactory().Create(typeof(TestClass).GetMethod("TestException"));
             object res = inv.Invoke(new TestClass());
         }
 
         [Test]
         public void TestGenerics()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass)
+            var inv = new DelegateFactory().Create(typeof(TestClass)
                 .GetMethod("TestGenerics").MakeGenericMethod(typeof(string)));
             object res = inv.Invoke(new TestClass(), "42");
             res.Should().Be(42);
@@ -145,7 +145,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void TestGenericsVoid()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass)
+            var inv = new DelegateFactory().Create(typeof(TestClass)
                 .GetMethod("TestGenericsVoid").MakeGenericMethod(typeof(string)));
             object res = inv.Invoke(new TestClass(), "42");
         }
@@ -153,7 +153,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void TestParams()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClass)
+            var inv = new DelegateFactory().Create(typeof(TestClass)
                 .GetMethod("TestParams"));
 
             object res = inv.Invoke(new TestClass(), 4, new string[] { "1", "2", "3" });
@@ -163,7 +163,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void TestCreateInstance1()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClassConstructors)
+            var inv = new DelegateFactory().Create(typeof(TestClassConstructors)
                 .GetConstructor(new[] { typeof(string), typeof(string) }));
 
             var obj = inv(null, "A", "B") as TestClassConstructors;
@@ -175,7 +175,7 @@ namespace Simple.Tests.Reflection
         [Test, Explicit("The world is cruel, my friend")]
         public void WillNotBeAbleToCallPropertySetToWrongType()
         {
-            var inv = InvokerFactory.Do.Create(typeof(ClassB)
+            var inv = new DelegateFactory().Create(typeof(ClassB)
                 .GetProperty("Prop").GetSetMethod());
             var a = new ClassA();
 
@@ -187,7 +187,7 @@ namespace Simple.Tests.Reflection
         [Test]
         public void TestCreateInstance2()
         {
-            var inv = InvokerFactory.Do.Create(typeof(TestClassConstructors)
+            var inv = new DelegateFactory().Create(typeof(TestClassConstructors)
                 .GetConstructor(new[] { typeof(int), typeof(int) }));
 
             var obj = inv(null, 1, 2) as TestClassConstructors;

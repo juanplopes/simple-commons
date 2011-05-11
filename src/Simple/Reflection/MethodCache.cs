@@ -6,21 +6,20 @@ using System.Linq;
 
 namespace Simple.Reflection
 {
-    public class MethodCache : Singleton<MethodCache>
+    public class MethodCache
     {
-        Dictionary<MethodBase, InvocationDelegate> _methods = new Dictionary<MethodBase, InvocationDelegate>();
+        DelegateFactory factory = new DelegateFactory();
+        Dictionary<int, InvocationDelegate> _methods = new Dictionary<int, InvocationDelegate>();
 
         public InvocationDelegate GetInvoker(MethodBase method)
         {
-            lock (_methods)
-            {
-                InvocationDelegate res;
+            InvocationDelegate res;
 
-                if (!_methods.TryGetValue(method, out res))
-                    _methods[method] = res = InvokerFactory.Do.Create(method);
+            var token = method.MetadataToken;
+            if (!_methods.TryGetValue(token, out res))
+                _methods[token] = res = factory.Create(method);
 
-                return res;
-            }
+            return res;
         }
 
         public T CreateInstance<T>(params object[] parameters)

@@ -15,8 +15,9 @@ namespace Simple.Tests.DynamicProxy
             public string GetString() { return "4"; }
             public void TestVoid(int param) { }
             public int TestIntParamReturn(int param) { return param; }
-            public T TestGenericParamReturn<T>(T param) { 
-                return param; 
+            public T TestGenericParamReturn<T>(T param)
+            {
+                return param;
             }
             public void TestRefAndOut(ref int p1, out int p2) { p2 = p1; p1 = 42; }
             public void TestException() { throw new InvalidCastException(); }
@@ -28,8 +29,7 @@ namespace Simple.Tests.DynamicProxy
             SimpleServer server = new SimpleServer();
             server.GetInt().Should().Be(10);
 
-            server = (SimpleServer)DynamicProxyFactory.Instance.CreateMarshallableProxy(server,
-                (o, m, p) => 42);
+            server = (SimpleServer)new EasyProxy((o, m, p) => 42).CreateMarshallable(server);
             server.GetInt().Should().Be(42);
         }
 
@@ -39,8 +39,7 @@ namespace Simple.Tests.DynamicProxy
             SimpleServer server = new SimpleServer();
             server.GetString().Should().Be("4");
 
-            server = (SimpleServer)DynamicProxyFactory.Instance.CreateMarshallableProxy(server,
-                (o, m, p) => m.Invoke(o, p) + "2");
+            server = (SimpleServer)new EasyProxy((o, m, p) => m.Invoke(o, p) + "2").CreateMarshallable(server);
             server.GetString().Should().Be("42");
         }
 
@@ -50,8 +49,7 @@ namespace Simple.Tests.DynamicProxy
             SimpleServer server = new SimpleServer();
             server.TestVoid(10);
 
-            server = (SimpleServer)DynamicProxyFactory.Instance.CreateMarshallableProxy(server,
-                (o, m, p) => m.Invoke(o, p));
+            server = (SimpleServer)new EasyProxy((o, m, p) => m.Invoke(o, p)).CreateMarshallable(server);
             server.TestVoid(10);
         }
 
@@ -61,8 +59,7 @@ namespace Simple.Tests.DynamicProxy
             SimpleServer server = new SimpleServer();
             server.TestIntParamReturn(10).Should().Be(10);
 
-            server = (SimpleServer)DynamicProxyFactory.Instance.CreateMarshallableProxy(server,
-                (o, m, p) => (int)m.Invoke(o, p) + 1);
+            server = (SimpleServer)new EasyProxy((o, m, p) => (int)m.Invoke(o, p) + 1).CreateMarshallable(server);
             server.TestIntParamReturn(10).Should().Be(11);
         }
 
@@ -72,8 +69,7 @@ namespace Simple.Tests.DynamicProxy
             SimpleServer server = new SimpleServer();
             server.TestGenericParamReturn(10).Should().Be(10);
 
-            server = (SimpleServer)DynamicProxyFactory.Instance.CreateMarshallableProxy(server,
-                (o, m, p) => (string)m.Invoke(o, p) + "2");
+            server = (SimpleServer)new EasyProxy((o, m, p) => m.Invoke(o, p) + "2").CreateMarshallable(server);
             server.TestGenericParamReturn("4").Should().Be("42");
         }
 
@@ -82,13 +78,12 @@ namespace Simple.Tests.DynamicProxy
         {
             SimpleServer server = new SimpleServer();
 
-            server = (SimpleServer)DynamicProxyFactory.Instance.CreateMarshallableProxy(server,
-                (o, m, p) =>
+            server = (SimpleServer)new EasyProxy((o, m, p) =>
                 {
-                    var invoker = InvokerFactory.Do.Create(m);
+                    var invoker = new DelegateFactory().Create(m);
                     invoker.Invoke(o, p);
                     return null;
-                });
+                }).CreateMarshallable(server);
 
             server.TestException();
         }
@@ -104,8 +99,8 @@ namespace Simple.Tests.DynamicProxy
             a.Should().Be(42);
             b.Should().Be(10);
 
-            server = (SimpleServer)DynamicProxyFactory.Instance.CreateMarshallableProxy(server,
-                (o, m, p) => { p[0] = 41; p[1] = 42; return null; });
+            server = (SimpleServer)new EasyProxy(
+                (o, m, p) => { p[0] = 41; p[1] = 42; return null; }).CreateMarshallable(server);
 
             server.TestRefAndOut(ref a, out b);
             a.Should().Be(41);

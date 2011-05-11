@@ -25,10 +25,10 @@ namespace Simple.Tests.Reflection
             Type t = typeof(Sample1);
 
             MethodInfo m1 = t.GetMethod("Method");
-            InvocationDelegate d1 = InvokerFactory.Do.Create(m1);
+            InvocationDelegate d1 = new DelegateFactory().Create(m1);
 
             MethodInfo m2 = t.GetMethod("Method");
-            InvocationDelegate d2 = InvokerFactory.Do.Create(m1);
+            InvocationDelegate d2 = new DelegateFactory().Create(m1);
 
             Assert.AreSame(m1, m2);
             Assert.AreNotSame(d1, d2);
@@ -41,10 +41,10 @@ namespace Simple.Tests.Reflection
             Type t = typeof(Sample1);
 
             MethodInfo m1 = t.GetProperty("Prop").GetSetMethod();
-            InvocationDelegate d1 = InvokerFactory.Do.Create(m1);
+            InvocationDelegate d1 = new DelegateFactory().Create(m1);
 
             MethodInfo m2 = t.GetProperty("Prop").GetSetMethod();
-            InvocationDelegate d2 = InvokerFactory.Do.Create(m1);
+            InvocationDelegate d2 = new DelegateFactory().Create(m1);
 
             Assert.AreSame(m1, m2);
             Assert.AreNotSame(d1, d2);

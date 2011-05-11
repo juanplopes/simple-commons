@@ -97,7 +97,7 @@ namespace Simple.Reflection
         {
             var parameters = Method.GetParameters().Skip(skip.Length);
             str.AppendFormat("({0})",
-                skip.Union(parameters.Select(x => string.Format("{0}{1}",
+                skip.Concat(parameters.Select(x => string.Format("{0}{1}",
                     GetParameterModifiers(x, false), x.Name))).StringJoin(", "));
         }
 

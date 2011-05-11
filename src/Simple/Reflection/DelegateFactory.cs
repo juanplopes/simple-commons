@@ -8,13 +8,12 @@ namespace Simple.Reflection
 {
     public delegate object InvocationDelegate(object target, params object[] args);
 
-    public class InvokerFactory : Singleton<InvokerFactory>
+    public class DelegateFactory
     {
         public InvocationDelegate Create(MethodBase method)
         {
             return GetMethodInvoker(method);
         }
-
         
         private static InvocationDelegate GetMethodInvoker(MethodBase methodBase)
         {

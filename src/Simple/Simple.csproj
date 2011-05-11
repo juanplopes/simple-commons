@@ -59,7 +59,6 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -74,6 +73,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AggregateOrDefaultExtensions.tt</DependentUpon>
     </Compile>
+    <Compile Include="DynamicProxy\EasyProxy.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Common\LazyEnumerable.cs" />
     <Compile Include="Common\NamedEvents.cs" />
@@ -84,7 +84,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="StringExtensions.cs" />
-    <Compile Include="DynamicProxy\MarshallableDynamicProxyImpl.cs" />
+    <Compile Include="DynamicProxy\MarshallableProxy.cs" />
     <Compile Include="Expressions\Editable\EditableElementInitCollection.cs" />
     <None Include="AggregateOrDefaultExtensions.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -154,9 +154,7 @@
     <Compile Include="Patterns\TransformationList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MathExtensions.cs" />
-    <Compile Include="Patterns\Singleton.cs" />
-    <Compile Include="DynamicProxy\DynamicProxyFactory.cs" />
-    <Compile Include="DynamicProxy\InterfaceDynamicProxyImpl.cs" />
+    <Compile Include="DynamicProxy\InterfaceProxy.cs" />
     <Compile Include="DynamicProxy\IDynamicProxy.cs" />
     <Compile Include="Patterns\WorkingDays.cs" />
     <Compile Include="Reflection\CompositeSettableMember.cs" />
@@ -172,7 +170,7 @@
     <Compile Include="Reflection\EqualityHelperEntry.cs" />
     <Compile Include="Reflection\FieldInfoWrapper.cs" />
     <Compile Include="Reflection\GenericSignature.cs" />
-    <Compile Include="Reflection\InvokerFactory.cs" />
+    <Compile Include="Reflection\DelegateFactory.cs" />
     <Compile Include="Reflection\AttributeCache.cs" />
     <Compile Include="Reflection\EqualityHelper.cs" />
     <Compile Include="Expressions\PredicateBuilder.cs" />

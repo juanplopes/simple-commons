@@ -10,7 +10,7 @@ namespace Simple.Reflection
     public class PropertyInfoWrapper : ISettableMemberInfo
     {
         [NonSerialized]
-        protected static MethodCache Cache = new MethodCache();
+        protected static MethodCache methods = new MethodCache();
 
         public PropertyInfo InternalMember { get; protected set; }
         public MemberInfo Member { get { return InternalMember; } }
@@ -29,11 +29,11 @@ namespace Simple.Reflection
         public void Set(object target, object value, params object[] index)
         {
             IEnumerable<object> args = new[] { value };
-            if (index != null) args = args.Union(index);
+            if (index != null) args = args.Concat(index);
             if (target != null && !target.GetType().CanAssign(InternalMember.DeclaringType))
                 throw new TargetException("Expected {0}".AsFormatFor(InternalMember.DeclaringType.GetRealClassName()));
 
-            Cache.GetSetter(InternalMember)(target, args.ToArray());
+            methods.GetSetter(InternalMember)(target, args.ToArray());
         }
 
         public void Set(object target, object value)
@@ -43,7 +43,7 @@ namespace Simple.Reflection
 
         public object Get(object target, params object[] index)
         {
-            return Cache.GetGetter(InternalMember)(target, index);
+            return methods.GetGetter(InternalMember)(target, index);
         }
 
         public object Get(object target)
