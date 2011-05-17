@@ -13,6 +13,8 @@ namespace Simple.Reflection
 
         public InvocationDelegate GetInvoker(MethodBase method)
         {
+            if (method == null) throw new ArgumentNullException("method");
+
             InvocationDelegate res;
 
             var token = method.MetadataToken;
