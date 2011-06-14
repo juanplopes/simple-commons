@@ -44,21 +44,19 @@ namespace Simple
         {
             var list = new List<T>(batchSize);
 
-            using (var enumerator = source.GetEnumerator())
+            foreach (var item in source)
             {
-                while (enumerator.MoveNext())
+                list.Add(item);
+                if (list.Count == batchSize)
                 {
-                    list.Add(enumerator.Current);
-                    if (list.Count == batchSize)
-                    {
-                        yield return list;
-                        list = new List<T>(batchSize);
-                    }
-                }
-
-                if (list.Any())
                     yield return list;
+                    list = new List<T>(batchSize);
+                }
             }
+
+            if (list.Any())
+                yield return list;
+
         }
 
         public static IEnumerable<Q> BatchSelect<T, Q>(this IEnumerable<T> source, int batchSize, Func<IEnumerable<T>, IEnumerable<Q>> func)
