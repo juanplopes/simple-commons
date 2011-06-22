@@ -11,7 +11,7 @@ namespace Simple.Reflection
     {
         [NonSerialized]
         protected static MethodCache methods = new MethodCache();
-
+        
         public PropertyInfo InternalMember { get; protected set; }
         public MemberInfo Member { get { return InternalMember; } }
 

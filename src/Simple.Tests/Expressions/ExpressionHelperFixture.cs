@@ -157,7 +157,7 @@ namespace Simple.Tests.Expressions
             a.BProp.CProp.IntProp.Should().Be(42);
         }
 
-        [Test, ExpectedException(typeof(MissingMethodException))]
+        [Test, ExpectedException(typeof(ArgumentNullException))]
         public void TestNoDefaultConstructorSet()
         {
             Expression<Func<A, int>> lambda = x => x.BProp.CProp.DProp.Value;
