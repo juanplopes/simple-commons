@@ -5,21 +5,16 @@
     <RootDir>$(MSBuildProjectDirectory)\</RootDir>
     <BuildDir>$(RootDir)build\</BuildDir>
     <PackageDir>$(RootDir)\pkg\</PackageDir>
-    <PackageLibDir>$(PackageDir)\lib\</PackageLibDir>
-
+   
     <SourceDir>$(RootDir)\src\</SourceDir>
-    <SourceBaseDir>$(RootDir)\src-tools\base\</SourceBaseDir>
-    <SourceBaseLibDir>$(SourceBaseDir)\lib\</SourceBaseLibDir>
-
     <KeyFilePath>$(SourceDir)\Simple.snk</KeyFilePath>
 
     <Configuration>Release</Configuration>
     <Platform>Any CPU</Platform>
 
-    <ProductVersionBase>3.5</ProductVersionBase>
-    <ProductVersionBuild></ProductVersionBuild>
-    <ProductBuildName>Avalon</ProductBuildName>
-
+    <ProductVersionBase>1.0</ProductVersionBase>
+    <ProductVersionBuild>0.0</ProductVersionBuild>
+   
     <MainLibraryName>simple-$(ProductVersionBase)</MainLibraryName>
     
     <TestAssembly>$(BuildDir)\Simple.Tests.exe</TestAssembly>
@@ -30,47 +25,27 @@
   </ItemGroup>
 
   <Import Project="util\msbuild\MSBuild.Community.Tasks.Targets"/>
-  <Import Project="util\msbuild\Simple.Tools.MsBuild.Targets"/>
 
   <Target Name="Clean">
     <MSBuild Projects="@(SolutionFile)" Targets="Clean" Properties="Configuration=$(Configuration);Platform=$(Platform);OutDir=$(BuildDir)"/>
     <RemoveDir Directories="$(BuildDir)" ContinueOnError="true"/>
-    <RemoveDir Directories="$(LibraryPackageDir)" ContinueOnError="true"/>
     <RemoveDir Directories="$(PackageDir)" ContinueOnError="true"/>
   </Target>
 
-  <Target Name="GenerateTag" Condition="'$(ProductVersionBuild)'==''">
-    <DaysSince StartDate='2008-10-17'>
-      <Output TaskParameter="Output" PropertyName="NumberOfDays"/>
-    </DaysSince>
-
-    <CreateProperty
-        Value="0.$(NumberOfDays)">
-      <Output TaskParameter="Value" PropertyName="ProductVersionBuild" />
-    </CreateProperty>
-  </Target>
-
-  <Target Name="GenerateAssemblyInfo" DependsOnTargets="GenerateTag">
+  <Target Name="GenerateAssemblyInfo">
     <Message Text="Product version: "/>
     <Message Text="##teamcity[buildNumber '$(ProductVersionBase).$(ProductVersionBuild)']"/>
-
-	<GitLastCommit Path=".">
-		<Output TaskParameter="CommitHash" PropertyName="LastCommitHash" />
-	</GitLastCommit>
 	
-    <WriteLinesToFile File="$(SourceDir)\Version.cs"
-                      Lines="namespace Simple { class VersionName { public const string Text = &quot;$(ProductBuildName)&quot;%3B public const string LastCommit = &quot;$(LastCommitHash)&quot;%3B } }" Overwrite="true" />
     <AssemblyInfo CodeLanguage="CS"
                OutputFile="$(SourceDir)\GlobalInfo.cs"
-               AssemblyCompany="Living Consultoria"
-               AssemblyProduct="Simple.Net ($(ProductBuildName))"
-               AssemblyCopyright="Copyright (c) Living Consultoria 2010"
+               AssemblyCompany="Juan Lopes"
+               AssemblyProduct="Simple Commons ($(ProductBuildName))"
+               AssemblyCopyright="Copyright (c) Juan Lopes 2011"
                AssemblyTrademark=""
                ComVisible="false"
                CLSCompliant="false"
                AssemblyVersion="$(ProductVersionBase).$(ProductVersionBuild)"
                AssemblyFileVersion="$(ProductVersionBase).$(ProductVersionBuild)" 
-			   AssemblyDescription="Built from: $(LastCommitHash)"
 			   />
   </Target>
 
@@ -89,71 +64,13 @@
   <Target Name="Integrate">
 	<CallTarget Targets="Rebuild;Test;Package"></CallTarget>
   </Target>
-  
-  <Target Name="MergeNH">
-    <ItemGroup>
-      <NHibernateItems Include="$(LibDir)\NHibernate\NHibernate.dll"/>
-      <NHibernateItems Include="$(LibDir)\NHibernate\NHibernate.Search.dll"/>
-      <NHibernateItems Include="$(LibDir)\NHibernate\Antlr3.Runtime.dll"/>
-      <NHibernateItems Include="$(LibDir)\NHibernate\Remotion.Data.Linq.dll"/>
-      <NHibernateItems Include="$(LibDir)\NHibernate\LinFu.DynamicProxy.dll"/>
-      <NHibernateItems Include="$(LibDir)\NHibernate\NHibernate.ByteCode.LinFu.dll"/>
-      <NHibernateItems Include="$(LibDir)\NHibernate\FluentNHibernate.dll"/>
-      <NHibernateItems Include="$(LibDir)\NHibernate\Iesi.Collections.dll"/>
-    </ItemGroup>
-    <ILMerge OutputFile="$(LibDir)\NHibernate.dll"
-            InputAssemblies="@(NHibernateItems)"
-            ToolPath="util\ilmerge"
-            LogFile=""
-             />
-  </Target>
 
-  <Target Name="MergeFluentValidation">
+  <Target Name="Package" DependsOnTargets="Build">
     <ItemGroup>
-      <FluentValidationItems Include="$(LibDir)\FluentValidation\FluentValidation.dll"/>
-      <FluentValidationItems Include="$(LibDir)\FluentValidation\**\*.dll" Exclude="$(LibDir)\FluentValidation\FluentValidation.dll"/>
+      <ZipFiles Include="$(BuildDir)\Simple.dll"/>
     </ItemGroup>
 
-    <ILMerge OutputFile="$(LibDir)\FluentValidation.dll"
-            InputAssemblies="@(FluentValidationItems)"
-            ToolPath="util\ilmerge"
-            LogFile=""
-             />
-  </Target>
-
-  <Target Name="CopyBuildResult" DependsOnTargets="Build">
-    <ItemGroup>
-      <Libraries Include="$(BuildDir)\Simple.dll"/>
-      <Libraries Include="$(BuildDir)\Simple.Data.dll"/>
-      <Libraries Include="$(BuildDir)\Simple.Generator.dll"/>
-      <Libraries Include="$(BuildDir)\Simple.Web.Mvc.dll"/>
-
-      <Libraries Include="$(BuildDir)\NPOI.dll"/>
-
-      <Libraries Include="$(BuildDir)\NVelocity.dll"/>
-      <Libraries Include="$(BuildDir)\NHibernate.dll"/>
-      <Libraries Include="$(BuildDir)\FluentValidation.dll"/>
-      <Libraries Include="$(BuildDir)\log4net.dll"/>
-
-      <Libraries Include="$(BuildDir)\Microsoft.Web.*.dll"/>
-      <Libraries Include="$(BuildDir)\System.Web.*.dll"/>
-      <Libraries Include="$(BuildDir)\MVCContrib.*.dll"/>
-      <Libraries Include="$(BuildDir)\MVCContrib.dll"/>
-    </ItemGroup>
-
-    <MakeDir Directories="$(PackageLibDir)"/>
-    <Copy SourceFiles ="@(Libraries)" DestinationFolder="$(PackageLibDir)" />
-    <Copy SourceFiles="@(Libraries)" DestinationFolder="$(SourceBaseLibDir)"/>
-    <Copy SourceFiles="$(BuildDir)\Simple.Gui.exe" DestinationFolder="$(SourceBaseDir)"/>
-  </Target>
-
-  <Target Name="Package" DependsOnTargets="Build;CopyBuildResult">
-    <ItemGroup>
-      <ZipFiles Include="$(PackageLibDir)\*.*"/>
-    </ItemGroup>
-
-    <Exec Command="util\nsis\makensis $(SourceBaseDir)\Extractor.nsi &quot;/XOutFile &#39;$(PackageDir)\$(MainLibraryName)-scaffold.exe&#39;&quot;"/>
-    <Zip Files="@(ZipFiles)" ZipFileName="$(PackageDir)\$(MainLibraryName)-lib.zip" WorkingDirectory="$(PackageLibDir)"/>
+    <Zip Files="@(ZipFiles)" ZipFileName="$(PackageDir)\$(MainLibraryName)-lib.zip" WorkingDirectory="$(BuildDir)"/>
   </Target>
 
 </Project>

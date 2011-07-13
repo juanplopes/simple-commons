@@ -12,7 +12,7 @@ namespace Simple.Tests.Common
         [Test]
         public void FirstPrimes()
         {
-            List<int> primes = new List<int>(MathExtensions.GetPrimes().Limit(12));
+            List<int> primes = new List<int>(MathExtensions.GetPrimes().Until(12));
             primes.Count.Should().Be(5);
 
             primes[0].Should().Be(2);
@@ -47,6 +47,26 @@ namespace Simple.Tests.Common
         public void Test6543rdPrime()
         {
             MathExtensions.GetPrimes().Skip(6542).Take(1).Single().Should().Be(65537);
+        }
+
+        [Test]
+        public void Factorizing600851475143ShouldReturn6857()
+        {
+            var maxFactor = MathExtensions.GetPrimes().Factorize(600851475143).Max();
+            maxFactor.Should().Be(6857);
+        }
+
+        [Test]
+        public void The10001stPrimeShouldBe104743()
+        {
+            var p = MathExtensions.GetPrimes().Skip(10000).First();
+            p.Should().Be(104743);
+        }
+
+        [Test]
+        public void Number4294967291IsPrime()
+        {
+            MathExtensions.GetPrimes().IsPrime(4294967291).Should().Be(true);
         }
 
         [Test]
