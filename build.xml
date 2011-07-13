@@ -15,7 +15,7 @@
     <ProductVersionBase>1.0</ProductVersionBase>
     <ProductVersionBuild>0.0</ProductVersionBuild>
    
-    <MainLibraryName>simple-$(ProductVersionBase)</MainLibraryName>
+    <MainLibraryName>simple-commons-$(ProductVersionBase)</MainLibraryName>
     
     <TestAssembly>$(BuildDir)\Simple.Tests.exe</TestAssembly>
   </PropertyGroup>
