@@ -15,7 +15,7 @@ namespace Simple.IO
             if (string.IsNullOrEmpty(dir)) dir = ".";
             var firstFile = Directory.GetFiles(dir, file).FirstOrDefault();
             if (firstFile == null)
-                throw new FileNotFoundException("Not found.", pattern);
+                throw new FileNotFoundException("Not found: {0}".AsFormatFor(pattern), pattern);
             else
                 return firstFile;
         }
